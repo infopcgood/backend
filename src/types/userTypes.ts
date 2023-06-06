@@ -5,7 +5,6 @@ export type State = {
 }
 
 export const userSchema = z.object({
-    id: z.number(),
     password_sha256: z.string(),
     username: z.string(),
 	name: z.string(),

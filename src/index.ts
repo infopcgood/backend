@@ -2,9 +2,10 @@ import Koa, { Context, Next } from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
 import 'dotenv/config'
-import { Schema, createConnection } from "mongoose"
-import userApiRouter from "./routes/userApiRouter.ts"
+import { createConnection } from "mongoose"
 import commandLineLogger from 'koa-logger'
+import userApiRouter from "./routes/userApiRouter.ts"
+import loginRouter from './routes/loginRouter.ts'
 
 const app = new Koa();
 const router = new Router();
@@ -22,6 +23,7 @@ router.get('/api/mint-chocolate', async (ctx:Context, next: Next) => {
 })
 
 app.use(userApiRouter.routes());
+app.use(loginRouter.routes());
 app.use(router.routes());
 
 app.listen(PORT, () => {

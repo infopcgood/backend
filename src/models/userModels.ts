@@ -5,7 +5,6 @@ import { User } from '../types/userTypes.ts'
 export const connection = createConnection(process.env.MONGODB_URI ?? "")
 
 export const userSchema = new Schema<User>({
-    id: {type: Number, required: true},
     password_sha256: {type: String, required: true},
     username: {type: String, required: true},
 	name: {type: String, required: true},
