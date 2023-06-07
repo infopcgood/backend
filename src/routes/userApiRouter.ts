@@ -32,6 +32,10 @@ userApiRouter.get('/api/user/sensitive-info', async (ctx:Context, next: Next) =>
 	ctx.assert(paramparse.success, 400)
 	const tokenData = await TokenModel.findOne({ token: paramparse.data.token }).lean().exec()
 	ctx.assert(tokenData,401)
+	if(tokenData.valid_until_timestamp > Date.now()){
+		await TokenModel.deleteOne(tokenData)
+		ctx.throw(401)
+	}
 	const data = await UserModel.findOne({ username: tokenData.username }).lean().exec()
 	ctx.assert(data,500)
 	ctx.status = 200
