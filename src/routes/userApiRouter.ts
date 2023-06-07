@@ -7,6 +7,16 @@ import { TokenModel } from '../models/loginModels.ts';
 
 const userApiRouter = new Router<State>();
 
+async function validateToken(tokenStr:string, ctx:Context, next:Next){
+	const tokenData = await TokenModel.findOne({ token: tokenStr }).lean().exec()
+	ctx.assert(tokenData,401)
+	if(tokenData.valid_until_timestamp > Date.now()){
+		await TokenModel.deleteOne(tokenData)
+		ctx.throw(401)
+	}
+	return tokenData
+}
+
 userApiRouter.get('/api/user/info/:username', async (ctx:Context, next: Next) => {
 	const paramparse = z.object({ username: z.string() }).safeParse(ctx.params)
 	ctx.assert(paramparse.success, 400)
@@ -30,13 +40,8 @@ userApiRouter.get('/api/user/info/:username', async (ctx:Context, next: Next) =>
 userApiRouter.get('/api/user/sensitive-info', async (ctx:Context, next: Next) => {
 	const paramparse = z.object({ token: z.string() }).safeParse(ctx.query)
 	ctx.assert(paramparse.success, 400)
-	const tokenData = await TokenModel.findOne({ token: paramparse.data.token }).lean().exec()
-	ctx.assert(tokenData,401)
-	if(tokenData.valid_until_timestamp > Date.now()){
-		await TokenModel.deleteOne(tokenData)
-		ctx.throw(401)
-	}
-	const data = await UserModel.findOne({ username: tokenData.username }).lean().exec()
+	const tokenData = validateToken(paramparse.data.token, ctx, next)
+	const data = await UserModel.findOne({ username: (await tokenData).username }).lean().exec()
 	ctx.assert(data,500)
 	ctx.status = 200
 	const parsedData = JSON.parse(JSON.stringify(data));
