@@ -1,7 +1,6 @@
 import 'dotenv/config'
-import { Schema, createConnection } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import { User } from '../types/userTypes.ts'
-import connection from '../index.ts'
 
 export const userSchema = new Schema<User>({
     password_sha256: {type: String, required: true},
@@ -17,4 +16,4 @@ export const userSchema = new Schema<User>({
     profile_image_url: {type: String, required: true},
 })
 
-export const UserModel = connection.model<User>('user', userSchema)
+export const UserModel = mongoose.model<User>('user', userSchema)

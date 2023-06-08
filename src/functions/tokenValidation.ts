@@ -7,7 +7,7 @@ async function validateTokenFunction(tokenStr:unknown, ctx:Context){
     }
 	const tokenData = await TokenModel.findOne({ token: tokenStr }).lean().exec()
 	ctx.assert(tokenData,401)
-	if(tokenData.valid_until_timestamp > Date.now()){
+	if(tokenData.valid_until_timestamp < Date.now()){
 		await TokenModel.deleteOne(tokenData)
 		ctx.throw(401)
 	}

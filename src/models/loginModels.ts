@@ -1,7 +1,6 @@
 import 'dotenv/config'
-import { Schema, createConnection } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import { RegisterToken, Token } from '../types/loginTypes.ts'
-import connection from '../index.ts'
 
 export const tokenSchema = new Schema<Token>({
     token: {type: String, required: true},
@@ -17,5 +16,5 @@ export const registerTokenSchema = new Schema<RegisterToken>({
     valid_until_timestamp: {type: Number, required: true}
 })
 
-export const TokenModel = connection.model<Token>('token', tokenSchema)
-export const RegisterTokenModel = connection.model<Token>('registerToken', registerTokenSchema)
+export const TokenModel = mongoose.model<Token>('token', tokenSchema)
+export const RegisterTokenModel = mongoose.model<RegisterToken>('registerToken', registerTokenSchema)

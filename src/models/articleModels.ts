@@ -1,7 +1,6 @@
 import 'dotenv/config'
-import { Schema, createConnection } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import { Article, Comment, Reply } from '../types/articleTypes.ts'
-import connection from '../index.ts'
 
 export const articleSchema = new Schema<Article>({
     id: {type: Number, required: true},
@@ -34,6 +33,6 @@ export const replySchema = new Schema<Reply>({
     vote: {type: Number, requied: false, default: 0}
 })
 
-export const ArticleModel = connection.model<Article>('article',articleSchema)
-export const CommentModel = connection.model<Comment>('comment',commentSchema)
-export const ReplyModel = connection.model<Reply>('reply',replySchema)
+export const ArticleModel = mongoose.model<Article>('article',articleSchema)
+export const CommentModel = mongoose.model<Comment>('comment',commentSchema)
+export const ReplyModel = mongoose.model<Reply>('reply',replySchema)
