@@ -6,6 +6,7 @@ import { createConnection } from "mongoose"
 import commandLineLogger from 'koa-logger'
 import userApiRouter from "./routes/userApiRouter.ts"
 import loginRouter from './routes/loginRouter.ts'
+import articleRouter from './routes/articleRouter.ts'
 
 const app = new Koa();
 const router = new Router();
@@ -24,6 +25,7 @@ router.get('/api/mint-chocolate', async (ctx:Context, next: Next) => {
 
 app.use(userApiRouter.routes());
 app.use(loginRouter.routes());
+app.use(articleRouter.routes());
 app.use(router.routes());
 
 app.listen(PORT, () => {

@@ -1,8 +1,7 @@
 import 'dotenv/config'
 import { Schema, createConnection } from 'mongoose'
 import { User } from '../types/userTypes.ts'
-
-export const connection = createConnection(process.env.MONGODB_URI ?? "")
+import connection from '../index.ts'
 
 export const userSchema = new Schema<User>({
     password_sha256: {type: String, required: true},

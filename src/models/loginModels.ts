@@ -1,8 +1,7 @@
 import 'dotenv/config'
 import { Schema, createConnection } from 'mongoose'
 import { RegisterToken, Token } from '../types/loginTypes.ts'
-
-export const connection = createConnection(process.env.MONGODB_URI ?? "")
+import connection from '../index.ts'
 
 export const tokenSchema = new Schema<Token>({
     token: {type: String, required: true},

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": true, // weird error i can't fix?? rather not touch anything...
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Projects */

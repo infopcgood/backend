@@ -13,8 +13,9 @@ loginRouter.post('/api/login', async (ctx:Context, next: Next) => {
     ctx.assert(found.password_sha256 === ctx.query.password_sha256, 401)
     ctx.status = 200
     const token = new TokenModel({token: Crypto.randomBytes(64).toString('hex'), username: ctx.query.username, ip:ctx.ip, user_agent: ctx.headers['user-agent'], valid_until_timestamp: Date.now() + 604800})
-    await token.save()
-    const parsedToken = JSON.parse(JSON.stringify(token));
+    const savedToken = await token.save()
+    console.log(savedToken.token)
+    const parsedToken = JSON.parse(JSON.stringify(savedToken))
     // eslint-disable-next-line no-underscore-dangle
     delete parsedToken._id
     // eslint-disable-next-line no-underscore-dangle
