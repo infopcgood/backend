@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose'
 import { Article, Comment, Reply } from '../types/articleTypes.ts'
 
 export const articleSchema = new Schema<Article>({
-    id: {type: Number, required: true},
+    id: {type: String, required: true},
     title: {type: String, required: true},
     time_written: {type: Number, required: true},
     time_edited: {type: Number, required: true},
@@ -14,7 +14,7 @@ export const articleSchema = new Schema<Article>({
 })
 
 export const commentSchema = new Schema<Comment>({
-    id: {type: Number, requied: true},
+    id: {type: String, requied: true},
     articleId: {type: Number, requied: true},
     time_written: {type: Number, requied: true},
     time_edited: {type: Number, requied: true},
@@ -24,7 +24,7 @@ export const commentSchema = new Schema<Comment>({
 })
 
 export const replySchema = new Schema<Reply>({
-    id: {type: Number, requied: true},
+    id: {type: String, requied: true},
     parentId: {type: Number, requied: true},
     time_written: {type: Number, requied: true},
     time_edited: {type: Number, requied: true},
