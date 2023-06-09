@@ -29,18 +29,42 @@ articleRouter.post('/api/article/new', async (ctx: Context, next: Next) => {
 	ctx.assert(userData,500)
 	const paramparse = z.object({ title: z.string(), content: z.string(), tags: z.array(z.string())}).safeParse(ctx.request.body)
     ctx.assert(paramparse.success,400)
-    let articleId = Crypto.randomBytes(12).toString('hex')
+    let articleId = Crypto.randomBytes(6).toString('hex')
     let document = await ArticleModel.findOne({ id: articleId }).exec()
     while(document !== null){
-        articleId = Crypto.randomBytes(12).toString('hex')
+        articleId = Crypto.randomBytes(6).toString('hex')
         // eslint-disable-next-line no-await-in-loop
         document = await ArticleModel.findOne({ id: articleId }).exec()
     }
     const time = Date.now()
-    const model = new ArticleModel({id: articleId, title: paramparse.data.title, time_written: time, time_edited: time, content: paramparse.data.content, tags: paramparse.data.tags, author: userData.username, vote: 0})
+    const model = new ArticleModel({id: articleId, title: paramparse.data.title, time_written: time, time_edited: time, content: paramparse.data.content, tags: paramparse.data.tags, author: userData.username})
     model.save()
     ctx.status = 201
     ctx.body = model
+    await next()
+})
+
+articleRouter.put('/api/article/edit', async (ctx: Context, next: Next) => {
+    const tokenData =  validateToken(ctx.query.token,ctx)
+    const userData = await UserModel.findOne({ username: (await tokenData).username }).lean().exec()
+    ctx.assert(userData,500)
+    const paramparse = z.object({ id: z.string(), title: z.string(), content: z.string(), tags: z.array(z.string())}).safeParse(ctx.request.body)
+    ctx.assert(paramparse.success,400)
+    const found = await ArticleModel.findOne({id:paramparse.data.id}).exec()
+    ctx.assert(found,404)
+    ctx.assert(found.author === userData.username,403)
+    found.title = paramparse.data.title
+    found.content = paramparse.data.content
+    found.tags = paramparse.data.tags
+    found.time_edited = Date.now()
+    found.save()
+    ctx.status = 200
+    const parsedData = JSON.parse(JSON.stringify(found))
+    // eslint-disable-next-line no-underscore-dangle
+    delete parsedData.__v
+    // eslint-disable-next-line no-underscore-dangle
+    delete parsedData._id
+    ctx.body = parsedData
     await next()
 })
 

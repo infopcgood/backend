@@ -10,7 +10,7 @@ export const articleSchema = new Schema<Article>({
     content: {type: String, required: true},
     author: {type: String, required: true},
     tags: {type: [String], required: true},
-    vote: {type: Number, required: true}
+    vote: {type: Number, required: false, default: 0}
 })
 
 export const commentSchema = new Schema<Comment>({
@@ -20,7 +20,7 @@ export const commentSchema = new Schema<Comment>({
     time_edited: {type: Number, requied: true},
     content: {type: String, requied: true},
     author: {type: String, requied: true},
-    vote: {type: Number, requied: true}
+    vote: {type: Number, requied: false, default: 0}
 })
 
 export const replySchema = new Schema<Reply>({
