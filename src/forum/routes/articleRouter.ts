@@ -10,7 +10,7 @@ import { UserModel } from '../../base/models/userModels.ts';
 const articleRouter = new Router<State>();
 
 articleRouter.get('/api/article/:id', async (ctx: Context, next: Next) => {
-    await validateToken(ctx.query.token,ctx)
+    await validateToken(ctx)
     const found = await ArticleModel.findOne({id:ctx.params.id}).lean().exec()
     ctx.assert(found,404)
     ctx.status = 200
@@ -24,7 +24,7 @@ articleRouter.get('/api/article/:id', async (ctx: Context, next: Next) => {
 })
 
 articleRouter.post('/api/article/new', async (ctx: Context, next: Next) => {
-    const tokenData =  validateToken(ctx.query.token,ctx)
+    const tokenData =  validateToken(ctx)
 	const userData = await UserModel.findOne({ username: (await tokenData).username }).lean().exec()
 	ctx.assert(userData,500)
 	const paramparse = z.object({ title: z.string(), content: z.string(), tags: z.array(z.string())}).safeParse(ctx.request.body)
@@ -40,12 +40,17 @@ articleRouter.post('/api/article/new', async (ctx: Context, next: Next) => {
     const model = new ArticleModel({id: articleId, title: paramparse.data.title, time_written: time, time_edited: time, content: paramparse.data.content, tags: paramparse.data.tags, author: userData.username})
     model.save()
     ctx.status = 201
-    ctx.body = model
+    const parsedModel = JSON.parse(JSON.stringify(model))
+    // eslint-disable-next-line no-underscore-dangle
+    delete parsedModel.__v
+    // eslint-disable-next-line no-underscore-dangle
+    delete parsedModel._id
+    ctx.body = parsedModel
     await next()
 })
 
 articleRouter.put('/api/article/edit/:id', async (ctx: Context, next: Next) => {
-    const tokenData =  validateToken(ctx.query.token,ctx)
+    const tokenData =  validateToken(ctx)
     const userData = await UserModel.findOne({ username: (await tokenData).username }).lean().exec()
     ctx.assert(userData,500)
     const paramparse = z.object({ title: z.string(), content: z.string(), tags: z.array(z.string())}).safeParse(ctx.request.body)
@@ -69,14 +74,14 @@ articleRouter.put('/api/article/edit/:id', async (ctx: Context, next: Next) => {
 })
 
 articleRouter.delete('/api/article/delete/:id', async (ctx: Context, next: Next) => {
-    const tokenData = validateToken(ctx.query.token,ctx)
+    const tokenData = validateToken(ctx)
     const userData = await UserModel.findOne({ username: (await tokenData).username }).lean().exec()
     ctx.assert(userData,500)
     const found = await ArticleModel.findOne({id:ctx.params.id}).exec()
     ctx.assert(found,404)
     ctx.assert(found.author === userData.username,403)
     found.deleteOne()
-    ctx.status = 204
+    ctx.status = 200
     await next()
 })
 

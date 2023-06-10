@@ -28,9 +28,7 @@ userApiRouter.get('/api/user/info/:username', async (ctx:Context, next: Next) =>
 })
 
 userApiRouter.get('/api/user/sensitive-info', async (ctx:Context, next: Next) => {
-	const paramparse = z.object({ token: z.string() }).safeParse(ctx.query)
-	ctx.assert(paramparse.success, 400)
-	const tokenData = validateToken(paramparse.data.token, ctx)
+	const tokenData = validateToken(ctx)
 	const data = await UserModel.findOne({ username: (await tokenData).username }).lean().exec()
 	ctx.assert(data,500)
 	ctx.status = 200
@@ -56,13 +54,15 @@ userApiRouter.post('/api/user/manual-register', async (ctx:Context, next: Next) 
 })
 
 userApiRouter.delete('/api/user/manual-delete/:username', async (ctx: Context, next: Next) => {
-	const paramparse = z.object({ username: z.string() }).safeParse(ctx.params)
-	ctx.assert(paramparse.success, 400)
-	const document = await UserModel.findOne({ username: paramparse.data.username }).exec()
-	ctx.assert(document, 404)
-	await document.deleteOne()
-	ctx.status = 200 // maybe 204
-	await next()
+	// wait what
+	ctx.throw(403)
+	// const paramparse = z.object({ username: z.string() }).safeParse(ctx.params)
+	// ctx.assert(paramparse.success, 400)
+	// const document = await UserModel.findOne({ username: paramparse.data.username }).exec()
+	// ctx.assert(document, 404)
+	// await document.deleteOne()
+	// ctx.status = 200 // maybe 204
+	// await next()
   })
 
 export default userApiRouter

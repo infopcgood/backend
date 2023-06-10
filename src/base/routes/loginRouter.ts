@@ -20,6 +20,7 @@ loginRouter.post('/api/login', async (ctx:Context, next: Next) => {
     // eslint-disable-next-line no-underscore-dangle
     delete parsedToken.__v
     ctx.body = parsedToken
+    ctx.cookies.set('token', parsedToken.token, { httpOnly: true, maxAge: 604800000 });
     await next()
 })
 
