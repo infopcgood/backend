@@ -4,9 +4,9 @@ import bodyParser from 'koa-bodyparser'
 import 'dotenv/config'
 import mongoose, { createConnection } from "mongoose"
 import commandLineLogger from 'koa-logger'
-import userApiRouter from "./routes/userApiRouter.ts"
-import loginRouter from './routes/loginRouter.ts'
-import articleRouter from './routes/articleRouter.ts'
+import userApiRouter from "./forum/routes/userApiRouter.ts"
+import loginRouter from './base/routes/loginRouter.ts'
+import articleRouter from './forum/routes/articleRouter.ts'
 
 mongoose.connect(process.env.MONGODB_URI ?? "")
 

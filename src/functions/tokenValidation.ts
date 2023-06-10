@@ -1,5 +1,5 @@
 import { Context } from "koa"
-import { TokenModel } from "../models/loginModels.ts"
+import { TokenModel } from "../base/models/loginModels.ts"
 
 async function validateTokenFunction(tokenStr:unknown, ctx:Context){
     if(typeof(tokenStr)!==typeof('hello')){

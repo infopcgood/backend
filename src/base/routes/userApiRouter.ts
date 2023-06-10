@@ -3,7 +3,7 @@ import Router from 'koa-router'
 import { z } from 'zod';
 import { State, userSchema } from '../types/userTypes.ts';
 import { UserModel } from '../models/userModels.ts';
-import { validateToken } from '../functions/tokenValidation.ts';
+import { validateToken } from '../../functions/tokenValidation.ts';
 
 const userApiRouter = new Router<State>();
 

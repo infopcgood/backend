@@ -4,8 +4,8 @@ import { z } from 'zod';
 import Crypto from 'crypto';
 import { State } from '../types/articleTypes.ts';
 import { ArticleModel } from '../models/articleModels.ts';
-import { validateToken } from '../functions/tokenValidation.ts';
-import { UserModel } from '../models/userModels.ts';
+import { validateToken } from '../../functions/tokenValidation.ts';
+import { UserModel } from '../../base/models/userModels.ts';
 
 const articleRouter = new Router<State>();
 
