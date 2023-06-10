@@ -2,9 +2,9 @@ import Koa, { Context, Next } from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
 import 'dotenv/config'
-import mongoose, { createConnection } from "mongoose"
+import mongoose from "mongoose"
 import commandLineLogger from 'koa-logger'
-import userApiRouter from "./forum/routes/userApiRouter.ts"
+import userApiRouter from "./base/routes/userApiRouter.ts"
 import loginRouter from './base/routes/loginRouter.ts'
 import articleRouter from './forum/routes/articleRouter.ts'
 
@@ -29,5 +29,6 @@ app.use(articleRouter.routes());
 app.use(router.routes());
 
 app.listen(PORT, () => {
-    console.log('Server is listening.');
-});
+    // eslint-disable-next-line no-console
+	console.log(`Server running on port ${PORT}`)
+})
