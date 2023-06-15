@@ -1,11 +1,11 @@
-import { Context, Next } from 'koa';
+import { Context, Next } from 'koa'
 import Router from 'koa-router'
 import Crypto from 'crypto'
-import { State } from '../types/loginTypes.ts';
-import { UserModel } from '../models/userModels.ts';
-import { TokenModel } from '../models/loginModels.ts';
+import { State } from '../types/loginTypes.ts'
+import { UserModel } from '../models/userModels.ts'
+import { TokenModel } from '../models/loginModels.ts'
 
-const loginRouter = new Router<State>();
+const loginRouter = new Router<State>()
 
 loginRouter.post('/api/login', async (ctx:Context, next: Next) => {
 	const found = await UserModel.findOne({ username: ctx.query.username }).lean().exec()
@@ -20,7 +20,7 @@ loginRouter.post('/api/login', async (ctx:Context, next: Next) => {
     // eslint-disable-next-line no-underscore-dangle
     delete parsedToken.__v
     ctx.body = parsedToken
-    ctx.cookies.set('token', parsedToken.token, { httpOnly: true, maxAge: 604800000 });
+    ctx.cookies.set('token', parsedToken.token, { httpOnly: true, maxAge: 604800000 })
     await next()
 })
 

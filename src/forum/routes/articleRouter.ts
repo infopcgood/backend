@@ -1,13 +1,13 @@
-import { Context, Next } from 'koa';
+import { Context, Next } from 'koa'
 import Router from 'koa-router'
-import { z } from 'zod';
-import Crypto from 'crypto';
-import { State } from '../types/articleTypes.ts';
-import { ArticleModel } from '../models/articleModels.ts';
-import { validateToken } from '../../functions/tokenValidation.ts';
-import { UserModel } from '../../base/models/userModels.ts';
+import { z } from 'zod'
+import Crypto from 'crypto'
+import { State } from '../types/articleTypes.ts'
+import { ArticleModel } from '../models/articleModels.ts'
+import { validateToken } from '../../functions/tokenValidation.ts'
+import { UserModel } from '../../base/models/userModels.ts'
 
-const articleRouter = new Router<State>();
+const articleRouter = new Router<State>()
 
 articleRouter.get('/api/article/:id', async (ctx: Context, next: Next) => {
     await validateToken(ctx)

@@ -7,12 +7,12 @@ import commandLineLogger from 'koa-logger'
 import userApiRouter from "./base/routes/userApiRouter.ts"
 import loginRouter from './base/routes/loginRouter.ts'
 import articleRouter from './forum/routes/articleRouter.ts'
-import { initNovelAi } from './sharevice/routes/novelAiRoutes.ts'
+import novelAiRouter, { initNovelAi } from './sharevice/routes/novelAiRoutes.ts'
 
 mongoose.connect(process.env.MONGODB_URI ?? "")
 
-const app = new Koa();
-const router = new Router();
+const app = new Koa()
+const router = new Router()
 const PORT = 3000
 
 app.use(bodyParser())
@@ -23,10 +23,11 @@ router.get('/api/mint-chocolate', async (ctx:Context, next: Next) => {
 	await next()
 })
 
-app.use(userApiRouter.routes());
-app.use(loginRouter.routes());
-app.use(articleRouter.routes());
-app.use(router.routes());
+app.use(userApiRouter.routes())
+app.use(loginRouter.routes())
+app.use(articleRouter.routes())
+app.use(novelAiRouter.routes())
+app.use(router.routes())
 
 // eslint-disable-next-line func-names
 initNovelAi().then(function() {
