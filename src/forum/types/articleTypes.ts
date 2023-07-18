@@ -6,6 +6,7 @@ export type State = {
 
 export const articleSchema = z.object({
   id: z.string(),
+  board: z.string(),
   title: z.string(),
   time_written: z.number(),
   time_edited: z.number(),
@@ -17,6 +18,7 @@ export const articleSchema = z.object({
 
 export const commentSchema = z.object({
   id: z.string(),
+  board: z.string(),
   articleId: z.number(),
   time_written: z.number(),
   time_edited: z.number(),
@@ -27,6 +29,7 @@ export const commentSchema = z.object({
 
 export const replySchema = z.object({
   id: z.string(),
+  board: z.string(),
   parentId: z.number(),
   time_written: z.number(),
   time_edited: z.number(),

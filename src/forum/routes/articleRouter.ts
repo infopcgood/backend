@@ -29,10 +29,10 @@ articleRouter.post('/api/article/new', async (ctx: Context, next: Next) => {
 	ctx.assert(userData,500)
 	const paramparse = z.object({ title: z.string(), content: z.string(), tags: z.array(z.string())}).safeParse(ctx.request.body)
     ctx.assert(paramparse.success,400)
-    let articleId = Crypto.randomBytes(6).toString('hex')
+    let articleId = Crypto.randomBytes(16).toString('hex')
     let document = await ArticleModel.findOne({ id: articleId }).exec()
     while(document !== null){
-        articleId = Crypto.randomBytes(6).toString('hex')
+        articleId = Crypto.randomBytes(16).toString('hex')
         // eslint-disable-next-line no-await-in-loop
         document = await ArticleModel.findOne({ id: articleId }).exec()
     }
@@ -57,7 +57,7 @@ articleRouter.put('/api/article/edit/:id', async (ctx: Context, next: Next) => {
     ctx.assert(paramparse.success,400)
     const found = await ArticleModel.findOne({id:ctx.params.id}).exec()
     ctx.assert(found,404)
-    ctx.assert(found.author === userData.username,403)
+    ctx.assert(found.author === userData.username,401)
     found.title = paramparse.data.title
     found.content = paramparse.data.content
     found.tags = paramparse.data.tags
@@ -79,7 +79,7 @@ articleRouter.delete('/api/article/delete/:id', async (ctx: Context, next: Next)
     ctx.assert(userData,500)
     const found = await ArticleModel.findOne({id:ctx.params.id}).exec()
     ctx.assert(found,404)
-    ctx.assert(found.author === userData.username,403)
+    ctx.assert(found.author === userData.username,401)
     found.deleteOne()
     ctx.status = 200
     await next()

@@ -8,6 +8,7 @@ import userApiRouter from "./base/routes/userApiRouter.ts"
 import loginRouter from './base/routes/loginRouter.ts'
 import articleRouter from './forum/routes/articleRouter.ts'
 import novelAiRouter, { initNovelAi } from './sharevice/routes/novelAiRoutes.ts'
+import anonArticleRouter from './forum/routes/anonArticleRouter.ts'
 
 mongoose.connect(process.env.MONGODB_URI ?? "")
 
@@ -18,7 +19,7 @@ const PORT = 3000
 app.use(bodyParser())
 app.use(commandLineLogger())
 
-router.get('/api/mint-chocolate', async (ctx:Context, next: Next) => {
+router.get('/api/mint-chocolate', async (ctx:Context, next: Next) => { // highly forbidden method!!!!!
 	ctx.status = 403
 	await next()
 })
@@ -26,6 +27,7 @@ router.get('/api/mint-chocolate', async (ctx:Context, next: Next) => {
 app.use(userApiRouter.routes())
 app.use(loginRouter.routes())
 app.use(articleRouter.routes())
+app.use(anonArticleRouter.routes())
 app.use(novelAiRouter.routes())
 app.use(router.routes())
 
