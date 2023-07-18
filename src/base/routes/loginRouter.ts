@@ -25,6 +25,7 @@ loginRouter.post('/api/login', async (ctx:Context, next: Next) => {
 })
 
 loginRouter.post('/api/register_request', async (ctx:Context, next: Next) => {
+    
     await next()
 })
 
