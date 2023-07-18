@@ -42,27 +42,4 @@ userApiRouter.get('/api/user/sensitive-info', async (ctx:Context, next: Next) =>
 	await next()
 })
 
-userApiRouter.post('/api/user/manual-register', async (ctx:Context, next: Next) => {
-	const bodyparse = userSchema.safeParse(ctx.request.body)
-	ctx.assert(bodyparse.success, 400)
-	const found = await UserModel.findOne({ username: bodyparse.data.username }).lean().exec()
-	ctx.assert(found === null, 409)
-	const model = new UserModel(bodyparse.data)
-	await model.save()
-	ctx.status = 201
-	await next()
-})
-
-userApiRouter.delete('/api/user/manual-delete/:username', async (ctx: Context, next: Next) => {
-	// wait what
-	ctx.throw(503)
-	// const paramparse = z.object({ username: z.string() }).safeParse(ctx.params)
-	// ctx.assert(paramparse.success, 400)
-	// const document = await UserModel.findOne({ username: paramparse.data.username }).exec()
-	// ctx.assert(document, 404)
-	// await document.deleteOne()
-	// ctx.status = 200 // maybe 204
-	// await next()
-  })
-
 export default userApiRouter

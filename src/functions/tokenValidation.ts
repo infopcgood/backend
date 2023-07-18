@@ -9,6 +9,12 @@ async function validateTokenFunction(ctx:Context){
 		await TokenModel.deleteOne(tokenData)
 		ctx.throw(401)
 	}
+	else if(tokenData.ip !== ctx.ip) {
+		ctx.throw(401)
+	}
+	else if(tokenData.user_agent !== ctx.headers["user-agent"]) {
+		ctx.throw(401)
+	}
 	return tokenData
 }
 
