@@ -4,6 +4,7 @@ import { Article, Comment, Reply } from '../types/articleTypes.ts'
 
 export const articleSchema = new Schema<Article>({
     id: {type: String, required: true},
+    board: {type: String, required: true},
     title: {type: String, required: true},
     time_written: {type: Number, required: true},
     time_edited: {type: Number, required: true},
@@ -15,6 +16,7 @@ export const articleSchema = new Schema<Article>({
 
 export const commentSchema = new Schema<Comment>({
     id: {type: String, requied: true},
+    board: {type: String, required: true},
     articleId: {type: Number, requied: true},
     time_written: {type: Number, requied: true},
     time_edited: {type: Number, requied: true},
@@ -25,6 +27,7 @@ export const commentSchema = new Schema<Comment>({
 
 export const replySchema = new Schema<Reply>({
     id: {type: String, requied: true},
+    board: {type: String, required: true},
     parentId: {type: Number, requied: true},
     time_written: {type: Number, requied: true},
     time_edited: {type: Number, requied: true},
