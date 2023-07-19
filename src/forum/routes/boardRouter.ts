@@ -4,8 +4,8 @@ import { ArticleModel } from "../models/articleModels"
 import { validateToken } from "../../functions/tokenValidation"
 import { AnonArticleModel } from "../models/anonArticleModels"
 
-const availableBoards = ['main','study','gaming','future']
-const availableAnonBoards = ['anon','forest']
+export const availableBoards = ['main','study','gaming','future']
+export const availableAnonBoards = ['anon','forest']
 type State = {
     start: number
 }

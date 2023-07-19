@@ -6,6 +6,7 @@ import { State } from '../types/articleTypes.ts'
 import { ArticleModel } from '../models/articleModels.ts'
 import { validateToken } from '../../functions/tokenValidation.ts'
 import { UserModel } from '../../base/models/userModels.ts'
+import { availableBoards } from './boardRouter.ts'
 
 const articleRouter = new Router<State>()
 
@@ -27,8 +28,9 @@ articleRouter.post('/api/article/new', async (ctx: Context, next: Next) => {
     const tokenData =  validateToken(ctx)
 	const userData = await UserModel.findOne({ username: (await tokenData).username }).lean().exec()
 	ctx.assert(userData,500)
-	const paramparse = z.object({ title: z.string(), content: z.string(), tags: z.array(z.string())}).safeParse(ctx.request.body)
+	const paramparse = z.object({ title: z.string(), board: z.string(), content: z.string(), tags: z.array(z.string())}).safeParse(ctx.request.body)
     ctx.assert(paramparse.success,400)
+    ctx.assert(availableBoards.find(x => x === paramparse.data.board) !== undefined, 400)
     let articleId = Crypto.randomBytes(16).toString('hex')
     let document = await ArticleModel.findOne({ id: articleId }).exec()
     while(document !== null){
@@ -37,7 +39,7 @@ articleRouter.post('/api/article/new', async (ctx: Context, next: Next) => {
         document = await ArticleModel.findOne({ id: articleId }).exec()
     }
     const time = Date.now()
-    const model = new ArticleModel({id: articleId, title: paramparse.data.title, time_written: time, time_edited: time, content: paramparse.data.content, tags: paramparse.data.tags, author: userData.username})
+    const model = new ArticleModel({id: articleId, board: z.string(), title: paramparse.data.title, time_written: time, time_edited: time, content: paramparse.data.content, tags: paramparse.data.tags, author: userData.username})
     model.save()
     ctx.status = 201
     const parsedModel = JSON.parse(JSON.stringify(model))

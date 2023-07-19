@@ -6,6 +6,7 @@ import { State } from '../types/anonArticleTypes.js'
 import { AnonArticleModel } from '../models/anonArticleModels.js'
 import { validateToken } from '../../functions/tokenValidation.js'
 import { UserModel } from '../../base/models/userModels.js'
+import { availableAnonBoards } from './boardRouter.js'
 
 const anonArticleRouter = new Router<State>()
 
@@ -25,8 +26,9 @@ anonArticleRouter.get('/api/anon-article/:id', async (ctx: Context, next: Next) 
 
 anonArticleRouter.post('/api/anon-article/new', async (ctx: Context, next: Next) => {
     await validateToken(ctx)
-	const bodyparse = z.object({ title: z.string(), content: z.string(), tags: z.array(z.string()), password_sha256: z.string()}).safeParse(ctx.request.body)
+	const bodyparse = z.object({ title: z.string(), board: z.string(), content: z.string(), tags: z.array(z.string()), password_sha256: z.string()}).safeParse(ctx.request.body)
     ctx.assert(bodyparse.success, 400)
+    ctx.assert(availableAnonBoards.find(x => x === bodyparse.data.board) !== undefined, 400)
     let articleId = Crypto.randomBytes(16).toString('hex')
     let document = await AnonArticleModel.findOne({ id: articleId }).lean().exec()
     while(document !== null){
