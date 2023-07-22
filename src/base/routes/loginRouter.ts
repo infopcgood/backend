@@ -26,7 +26,7 @@ loginRouter.post('/api/login', async (ctx:Context, next: Next) => {
     await next()
 })
 
-loginRouter.post('/api/register-request', async (ctx:Context, next: Next) => {
+loginRouter.post('/api/user/register-request', async (ctx:Context, next: Next) => {
 	const paramparse = z.object({ email: z.string() }).safeParse(ctx.query)
     ctx.assert(paramparse.success, 400)
     ctx.assert(paramparse.data.email.slice(5) === '@sshs.hs.kr',400) // check if email is ?????@sshs.hs.kr
@@ -41,7 +41,7 @@ loginRouter.post('/api/register-request', async (ctx:Context, next: Next) => {
     await next()
 })
 
-loginRouter.post('/api/finalize-register', async (ctx:Context, next: Next) => {
+loginRouter.post('/api/user/finalize-register', async (ctx:Context, next: Next) => {
 	const paramparse = z.object({ token: z.string() }).safeParse(ctx.query)
     ctx.assert(paramparse.success, 400)
     const foundRegisterToken = await RegisterTokenModel.findOne({ token: paramparse.data.token }).lean().exec()
@@ -58,7 +58,7 @@ loginRouter.post('/api/finalize-register', async (ctx:Context, next: Next) => {
     await next()
 })
 
-loginRouter.post('/api/manual-register', async (ctx:Context, next: Next) => {
+loginRouter.post('/api/user/manual-register', async (ctx:Context, next: Next) => {
 	const bodyparse = userSchema.safeParse(ctx.request.body)
 	ctx.assert(bodyparse.success, 400)
 	const found = await UserModel.findOne({ username: bodyparse.data.username }).lean().exec()
